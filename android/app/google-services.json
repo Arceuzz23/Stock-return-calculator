@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "572543485404",
+    "project_id": "stock-return-calci",
+    "storage_bucket": "stock-return-calci.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:572543485404:android:2d11787fbaade59e0d3b19",
+        "android_client_info": {
+          "package_name": "com.example.stock_return_calculator"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpYAWqAc3ao7KPIsze8t-wgG9XMTdK2zM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
