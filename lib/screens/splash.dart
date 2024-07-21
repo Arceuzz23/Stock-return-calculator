@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:lottie/lottie.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_return_calculator/authentication/user.dart';
@@ -12,10 +13,12 @@ class splash extends StatefulWidget {
   State<splash> createState() => _splashState();
 }
 class _splashState extends State<splash> {
+
   bool showSignIn = true;
   void toggleview() {
     setState(() => showSignIn = !showSignIn);
   }
+
   @override
   Widget build(BuildContext context) {
     return  StreamProvider<Users?>.value(
@@ -23,7 +26,9 @@ class _splashState extends State<splash> {
       value:AuthService().user,
       child: MaterialApp(
         home: AnimatedSplashScreen(
-          splash: Image.asset('assets/images/logo1.jpg'),
+          splash: Center(
+            child: LottieBuilder.asset("assets/animations/bit-rocket.json"),
+          ),
           nextScreen: const wrapper(),
           splashTransition: SplashTransition.fadeTransition,
           pageTransitionType: PageTransitionType.rightToLeftWithFade,

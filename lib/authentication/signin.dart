@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 import '../services/auth.dart';
 import '../shareds/const.dart';
@@ -12,7 +14,85 @@ class signin extends StatefulWidget {
   State<signin> createState() => _signinState();
 }
 
-class _signinState extends State<signin> {
+class _signinState extends State<signin> with SingleTickerProviderStateMixin {
+
+  late AnimationController controller;
+  late Animation<Alignment> topAlignment;
+  late Animation<Alignment> bottomAlignment;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      duration: const Duration(seconds: 5),
+      vsync: this,
+    );
+    topAlignment=TweenSequence<Alignment>(<TweenSequenceItem<Alignment>>[
+      TweenSequenceItem<Alignment>(
+        tween: Tween<Alignment>(
+          begin:Alignment.topLeft,
+          end: Alignment.topRight,
+        ),
+        weight: 1.0,
+      ),
+      TweenSequenceItem<Alignment>(
+        tween: Tween<Alignment>(
+          begin:Alignment.topRight,
+          end: Alignment.bottomRight,
+        ),
+        weight: 1.0,
+      ),
+      TweenSequenceItem<Alignment>(
+        tween: Tween<Alignment>(
+          begin:Alignment.bottomRight,
+          end: Alignment.bottomLeft,
+        ),
+        weight: 1.0,
+      ),
+      TweenSequenceItem<Alignment>(
+        tween: Tween<Alignment>(
+          begin:Alignment.bottomLeft,
+          end: Alignment.topLeft,
+        ),
+        weight: 1.0,
+      ),
+    ]).animate(controller);
+
+    bottomAlignment=TweenSequence<Alignment>(<TweenSequenceItem<Alignment>>[
+
+      TweenSequenceItem<Alignment>(
+        tween: Tween<Alignment>(
+          begin:Alignment.bottomRight,
+          end: Alignment.bottomLeft,
+        ),
+        weight: 1.0,
+      ),
+      TweenSequenceItem<Alignment>(
+        tween: Tween<Alignment>(
+          begin:Alignment.bottomLeft,
+          end: Alignment.topLeft,
+        ),
+        weight: 1.0,
+      ),
+      TweenSequenceItem<Alignment>(
+        tween: Tween<Alignment>(
+          begin:Alignment.topLeft,
+          end: Alignment.topRight,
+        ),
+        weight: 1.0,
+      ),
+      TweenSequenceItem<Alignment>(
+        tween: Tween<Alignment>(
+          begin:Alignment.topRight,
+          end: Alignment.bottomRight,
+        ),
+        weight: 1.0,
+      ),
+    ]).animate(controller);
+
+    controller.repeat();
+  }
+
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
   bool loading = false;
@@ -20,7 +100,7 @@ class _signinState extends State<signin> {
   bool isPassVisible = false;
   Icon pass = const Icon(
     Icons.visibility_off_outlined,
-    color: Colors.grey,
+    color: Colors.black,
   );
 
   String email = '';
@@ -30,166 +110,177 @@ class _signinState extends State<signin> {
   Widget build(BuildContext context) {
     return loading ? const Loading(): Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Container(
-          height: 10000,
-          width: 1000,
-          decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/images/cal_blurr1.jpg"),
-                fit: BoxFit.cover,
-                opacity: 0.5,
-              )),
+      body: AnimatedBuilder(
+        animation: controller,
+        builder: (context,_) {
+          return Container(
+
+          decoration:  BoxDecoration(
+          gradient: LinearGradient(colors: [
+          //     Color(0xffF99E43),
+          // Color(0xFFDA2323),
+            Color(0xff0ad981),
+            Color(0xFF006C91),
+          ],
+          begin: topAlignment.value,
+          end: bottomAlignment.value,)
+          ),
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+
           padding:
-          const EdgeInsets.symmetric(vertical: 20, horizontal: 50),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(
-                height: 169,
+              const EdgeInsets.symmetric(vertical: 20, horizontal: 50),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // const SizedBox(
+                  //   height: 169,
+                  // ),
+                  Container(
+                      height: 350,
+                      width: MediaQuery.of(context).size.width,
+                      child: LottieBuilder.asset("assets/animations/signin.json")),
+              Text('Sign In',style: GoogleFonts.bebasNeue(
+                fontSize: 65,
+                fontFeatures: const [FontFeature.tabularFigures()],
+                fontWeight: FontWeight.bold,
               ),
-              const Text(
-                "SIGN IN",
-                style: TextStyle(
-                    fontSize: 50, fontFamily: 'Computo Monospace'),
               ),
-              const SizedBox(
-                height: 0,
-              ),
-              Form(
-                  key: _formKey,
-                  child: Column(
-                    children: <Widget>[
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
 
-                          decoration: textInputDecoration.copyWith(
-                            prefixIcon: const Icon(
-                              Icons.email_outlined,
-                              color: Colors.grey,
-                            ),
-                            hintText: 'Email',
+                  Form(
+                      key: _formKey,
+                      child: Column(
+                        children: <Widget>[
+                          const SizedBox(
+                            height: 10,
                           ),
-                          validator: (val) =>
-                          val!.isEmpty ? 'Enter an email' : null,
-                          onChanged: (val) {
-                            setState(() => email = val);
-                          }
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                          decoration: textInputDecoration.copyWith(
-                              prefixIcon: const Icon(
-                                Icons.lock_outline_rounded,
-                                color: Colors.grey,
-                              ),
-                              suffixIcon: IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    isPassVisible = !isPassVisible;
-                                    if (isPassVisible) {
-                                      pass = const Icon(
-                                        Icons.visibility,
-                                        color: Colors.grey,
-                                      );
-                                    } else {
-                                      pass = const Icon(
-                                        Icons.visibility_off_outlined,
-                                        color: Colors.grey,
-                                      );
-                                    }
-                                  });
-                                },
+                          TextFormField(
 
-                                icon: pass,
+                              decoration: textInputDecoration.copyWith(
+                                prefixIcon: const Icon(
+                                  Icons.email_outlined,
+                                  color: Colors.black,
+                                ),
+                                hintText: 'Email',
                               ),
-                              hintText: 'Password'),
-                          obscureText: isPassVisible ? false : true,
-                          validator: (val) => val!.length < 6
-                              ? 'Password must be more than 6 characters'
-                              : null,
-                          onChanged: (val) {
-                            setState(() => password = val);
-                          }),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        width: 300,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(1),
-                        ),
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                const Color.fromRGBO(236, 61, 61, 1)),
-                            onPressed: () async {
-                              if (_formKey.currentState!.validate()) {
-                                setState(() => loading = true);
-                                dynamic result = await _auth
-                                    .singInWithEmailAndPassword(
-                                    email, password);
-                                if (result == null) {
-                                  setState(() {
-                                    error = 'wrong credentials';
-                                    loading = false;
-                                  });
-                                }
+                              validator: (val) =>
+                              val!.isEmpty ? 'Enter an email' : null,
+                              onChanged: (val) {
+                                setState(() => email = val);
                               }
-                            },
-                            child: const Text('Sign in',
-                                style: TextStyle(
-                                  fontSize: 19,
-                                  fontFamily: 'Trito Writter',
-                                  color:
-                                  Color.fromARGB(255, 255, 255, 255),
-                                ))),
-                      ),
-                      const SizedBox(
-                        height: 15.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            "Need an account? ",
-                            style: TextStyle(
-                              fontFamily: 'Trito Writter',
-                              fontSize: 18,
-                            ),
                           ),
-                          InkWell(
-                            onTap: () {
-                              widget.toggleview();
-                            },
-                            child: const Text(
-                              "Sign Up",
-                              style: TextStyle(
-                                fontFamily: 'Trito Writter',
-                                fontSize: 18,
-                                color: Color.fromRGBO(236, 61, 61, 1),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          TextFormField(
+                              decoration: textInputDecoration.copyWith(
+                                  prefixIcon: const Icon(
+                                    Icons.lock_outline_rounded,
+                                    color: Colors.black,
+                                  ),
+                                  suffixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        isPassVisible = !isPassVisible;
+                                        if (isPassVisible) {
+                                          pass = const Icon(
+                                            Icons.visibility,
+                                            color: Colors.black,
+                                          );
+                                        } else {
+                                          pass = const Icon(
+                                            Icons.visibility_off_outlined,
+                                            color: Colors.black,
+                                          );
+                                        }
+                                      });
+                                    },
+
+                                    icon: pass,
+                                  ),
+                                  hintText: 'Password'),
+                              obscureText: isPassVisible ? false : true,
+                              validator: (val) => val!.length < 6
+                                  ? 'Password must be more than 6 characters'
+                                  : null,
+                              onChanged: (val) {
+                                setState(() => password = val);
+                              }),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Container(
+                            width: 300,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(1),
+                            ),
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                    const Color(0xff00260c),),
+                                onPressed: () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    setState(() => loading = true);
+                                    dynamic result = await _auth
+                                        .singInWithEmailAndPassword(
+                                        email, password);
+                                    if (result == null) {
+                                      setState(() {
+                                        error = 'wrong credentials';
+                                        loading = false;
+                                      });
+                                    }
+                                  }
+                                },
+                                child:Text('Sign in',
+                                    style: GoogleFonts.robotoSlab(
+                                      fontSize: 19,
+                                      color:
+                                      Color.fromARGB(255, 255, 255, 255),
+                                    ))),
+                          ),
+                          const SizedBox(
+                            height: 15.0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                               Text(
+                                "Need an account? ",
+                                style: GoogleFonts.robotoSlab(
+                                  fontSize: 16,
+                                ),
                               ),
-                            ),
+                              InkWell(
+                                onTap: () {
+                                  widget.toggleview();
+                                },
+                                child: Text(
+                                  "Sign Up",
+                                  style: GoogleFonts.robotoSlab(
+                                    fontSize: 16,
+                                    color: Color(0xffff0000),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
+                          const SizedBox(
+                            height: 12.0,
+                          ),
+                          Text(
+                            error,
+                            style: const TextStyle(
+                                color: Color(0xffffffff), fontSize: 14.0),
+                          )
                         ],
-                      ),
-                      const SizedBox(
-                        height: 12.0,
-                      ),
-                      Text(
-                        error,
-                        style: const TextStyle(
-                            color: Colors.red, fontSize: 14.0),
-                      )
-                    ],
-                  )),
-            ],
-          )),
+                      )),
+                ],
+              ));
+        }
+      ),
     );
   }
 }

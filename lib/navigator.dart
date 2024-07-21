@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:stock_return_calculator/screens/PLCalci.dart';
 import 'package:stock_return_calculator/screens/home.dart';
+
 
 
 class navigator extends StatefulWidget {
@@ -11,9 +14,20 @@ class navigator extends StatefulWidget {
   State<navigator> createState() => _navigatorState();
 }
 
-class _navigatorState extends State<navigator> {
+class _navigatorState extends State<navigator> with SingleTickerProviderStateMixin{
 
+  Color newColor= Color(0xffF99E43);
   int _currentIndex = 0;
+
+  void color_changer(){
+    Duration duration = Duration(seconds: 1);
+    Timer timer =Timer(duration,onEnd);
+  }
+
+  void onEnd(){
+    newColor=Color(0xFFDA2323);
+  }
+
   List<Widget> screens = [
     const home(),
    const pl_calci(),
@@ -21,35 +35,31 @@ class _navigatorState extends State<navigator> {
   void ontapped(int index) {
     setState(() {
       _currentIndex = index;
+      color_changer();
     });
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: screens[_currentIndex],
-        bottomNavigationBar: CurvedNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: ontapped,
-          unselectedLabelStyle: const TextStyle(color: Colors.red),
-          selectedLabelStyle: const TextStyle(color: Colors.red),
-          fixedColor: Colors.white,
-          backgroundColor: Colors.black,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              activeIcon: Icon(Icons.home, color: Colors.white),
-              icon: Icon(Icons.home_outlined, color: Colors.grey,),
-              label: 'Home',
+        body:
+        Container(child: screens[_currentIndex]),
 
-              backgroundColor: Colors.black,
-            ),
-            BottomNavigationBarItem(
-              activeIcon: Icon(Icons.calculate_rounded, color: Colors.white) ,
-              icon: Icon(Icons.calculate_outlined,color: Colors.grey,),
-              label: 'P&L',
-              backgroundColor: Colors.black,
-            ),
-          ],
-        )
+      bottomNavigationBar:
+      CurvedNavigationBar(
+        index: _currentIndex,
+        height: 50.0,
+        items: <Widget>[
+          Icon(Icons.home, size: 30,color: Color(0xffF99E43),),
+          Icon(Icons.calculate_rounded, size: 30,color:Color(0xffF99E43),),
+        ],
+        buttonBackgroundColor: Colors.black,
+        backgroundColor:  Color(0xFFDA2323),
+        color: Colors.black,
+        animationCurve: Curves.easeInOut,
+        animationDuration: const Duration(milliseconds: 400),
+        onTap: ontapped,
+      )
+
     );
   }
 }
