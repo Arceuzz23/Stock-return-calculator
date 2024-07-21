@@ -87,9 +87,13 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin{
                         PopupMenuButton(
                             color: Colors.black,
                             iconColor: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                            ),
                             itemBuilder: (context) =>
                             [
                               PopupMenuItem(
+
                                 child: TextButton.icon(
                                     icon: const Icon(
                                       Icons.person,
@@ -98,9 +102,9 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin{
                                     onPressed: () async {
                                       await _auth.signout();
                                     },
-                                    label: const Text('Logout',
-                                        style: TextStyle(
-                                          fontFamily: 'Trito Writter',
+                                    label:  Text('Logout',
+                                        style: GoogleFonts.robotoSlab(
+                                          fontSize: 15,
                                           color: Colors.white,
                                         ))),
                               )
@@ -137,8 +141,8 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin{
                     const SizedBox(height: 20),
 
                     Container(
-                      height: 564,
-                      width: 369,
+                      height: 640,
+                      width: 380,
                       child: ListView.builder(
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
@@ -149,6 +153,8 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin{
                               children: [
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
+                                     backgroundColor: Color(0xFF230500),
+                                    // backgroundColor: Colors.white,
                                     elevation: 15,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(25.0),
@@ -311,16 +317,20 @@ class _homeState extends State<home> with SingleTickerProviderStateMixin{
                                         color: Colors.black,
                                         borderRadius: BorderRadius.circular(25.0),
                                       ),
-                                      child: Text('${index + 1}',
-                                        style: const TextStyle(
-                                            color: Colors.white),),
+                                      child: Center(
+                                        child: Text('${index + 1}',
+                                          style: const TextStyle(
+                                              color: Colors.white),),
+                                      ),
                                     ),
                                     title: Text(stock['1. symbol'],
-                                      style: const TextStyle(
-                                          color: Colors.black),),
+                                      style: GoogleFonts.robotoSlab(
+                                        fontSize: 16,
+                                          color: Colors.white),),
                                     subtitle: Text(stock['2. name'],
-                                        style: const TextStyle(
-                                            color: Colors.black)),
+                                        style: GoogleFonts.robotoSlab(
+                                          fontSize: 12,
+                                            color: Colors.grey)),
                                   ),
                                 ),
                                 const SizedBox(
